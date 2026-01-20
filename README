@@ -1,119 +1,37 @@
-                 ooooo     ooo  ooooooooo.  ooooooo  ooooo
-                 `888'     `8'  `888   `Y88. `8888    d8'
-                  888       8    888   .d88'   Y888..8P
-                  888       8    888ooo88P'     `8888'
-                  888       8    888           .8PY888.
-                  `88.    .8'    888          d8'  `888b
-                    `YbodP'     o888o       o888o  o88888o
+压缩exe文件的神器！解压到windows/system32目录即可。
 
+1、常用功能,命令示例,说明
+基础压缩,upx program.exe,使用默认级别压缩文件。
+指定级别,upx -9 program.exe,使用 1-9 级压缩（9 为最高，速度最慢）。
+极限压缩,upx --best program.exe,尝试所有压缩方法以达到最小体积。
+解压还原,upx -d program.exe,将压缩过的文件还原到原始大小。
+测试文件,upx -t program.exe,检查压缩文件的完整性。
+列出信息,upx -l program.exe,显示压缩比、原始大小等详细信息。
 
-                    The Ultimate Packer for eXecutables
-   Copyright (c) 1996-2026 Markus Oberhumer, Laszlo Molnar & John Reiser
-                           https://upx.github.io
+2、进阶参数说明
+如果你有更具体的需求，可以使用以下进阶参数：
+-o [file]：指定输出文件名，避免覆盖原文件。
+upx app.exe -o app_compressed.exe
+-f (force)：强制压缩。即使 UPX 认为压缩效果不佳或有潜在风险，也会执行。
+-k (keep)：压缩后保留原始文件的备份（通常会加上 .bak 后缀）。
+--ultra-brute：比 --best 还要激进的压缩模式，会尝试数千种排列组合，耗时较长，但体积最小。
 
+3、工作原理简述
+理解 UPX 的工作方式有助于你更好地使用它：
+压缩阶段：UPX 将原始的可执行文件（如 .exe, .elf）进行高比例压缩，并在文件头部添加一小段解压存根（Decompression Stub）。
+执行阶段：当你运行压缩后的程序时，存根代码首先运行。
+内存还原：存根在内存中将程序解压，然后将控制权移交给原始程序代码。
+性能损耗：由于解压是在内存中瞬间完成的，通常你感觉不到启动延迟。
 
+4、使用建议与注意事项
+不要重复压缩：对已经压缩过的文件（或已被其他工具加壳的文件）再次使用 UPX 通常没有效果，甚至可能导致程序损坏。
+杀毒软件误报：这是 UPX 最常见的问题。由于许多木马和病毒也使用 UPX 来隐藏代码特征，某些杀毒软件会直接将 UPX 压缩过的合法程序标记为病毒。
+动态链接库 (DLL)：UPX 可以压缩 DLL，但在某些复杂环境下（如插件系统）可能会导致加载失败，建议压缩后务必充分测试。
+不适合所有场景：对于现代大型 3D 游戏或资源文件极大的程序，压缩执行文件（.exe）提升有限，因为大部分体积在于外部素材。
 
-WELCOME
-=======
-
-Welcome to UPX !
-
-UPX is a free, secure, portable, extendable, high-performance
-executable packer for several executable formats.
-
-
-INTRODUCTION
-============
-
-UPX is an advanced executable file compressor. UPX will typically
-reduce the file size of programs and DLLs by around 50%-70%, thus
-reducing disk space, network load times, download times and
-other distribution and storage costs.
-
-Programs and libraries compressed by UPX are completely self-contained
-and run exactly as before, with no runtime or memory penalty for most
-of the supported formats.
-
-UPX supports a number of different executable formats, including
-Windows programs and DLLs, and Linux executables.
-
-UPX is free software distributed under the term of the GNU General
-Public License. Full source code is available.
-
-UPX may be distributed and used freely, even with commercial applications.
-See the UPX License Agreements for details.
-
-
-SECURITY CONTEXT
-================
-
-IMPORTANT NOTE: UPX inherits the security context of any files it handles.
-
-This means that packing, unpacking, or even testing or listing a file requires
-the same security considerations as actually executing the file.
-
-Use UPX on trusted files only!
-
-
-SHORT DOCUMENTATION
-===================
-
-'upx program.exe' will compress a program or DLL. For best compression
-results try 'upx --best program.exe' or 'upx --brute program.exe'.
-
-Please see the file doc/upx-doc.txt for the full documentation. The files
-NEWS and doc/BUGS.txt also contain various tidbits of information, as
-does the output of 'upx --help'.
-
-
-THE FUTURE
-==========
-
-  - Stay up-to-date with ongoing OS and executable format changes
-
-  - ARM64 for Windows (help wanted)
-
-  - We will *NOT* add any sort of protection and/or encryption.
-    This only gives people a false feeling of security because
-    all "protectors" can be broken by definition.
-
-  - Fix all remaining bugs - please report any issues
-    https://github.com/upx/upx/issues
-
-
-COPYRIGHT
-=========
-
-Copyright (C) 1996-2026 Markus Franz Xaver Johannes Oberhumer
-Copyright (C) 1996-2026 Laszlo Molnar
-Copyright (C) 2000-2026 John F. Reiser
-
-UPX is distributed with full source code under the terms of the
-GNU General Public License v2+; either under the pure GPLv2+ (see
-the file COPYING), or (at your option) under the GPLv2+ with special
-exceptions and restrictions granting the free usage for all binaries
-including commercial programs (see the file LICENSE).
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-You should have received a copy of the UPX License Agreements along
-with this program; see the files COPYING and LICENSE. If not,
-visit the UPX home page.
-
-
-Share and enjoy,
-Markus & Laszlo & John
-
-
-   Markus F.X.J. Oberhumer              Laszlo Molnar
-   <markus@oberhumer.com>               <ezerotven+github@gmail.com>
-
-   John F. Reiser
-   <jreiser@BitWagon.com>
-
-
-[ The term UPX is a shorthand for the Ultimate Packer for eXecutables
-  and holds no connection with potential owners of registered trademarks
-  or other rights. ]
+5、快速检查压缩效果
+压缩完成后，你可以运行以下命令查看节省了多少空间： upx -l your_file.exe
+它会输出类似如下的表格：
+File size         Ratio      Format      Name
+--------------------   ------   -----------   -----------
+1,048,576 -> 412,345   39.32%    win64/pe     your_file.exe
